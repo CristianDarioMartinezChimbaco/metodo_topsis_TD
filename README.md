@@ -73,27 +73,19 @@ SELECCIONE [1] LEER CSV [2] MANUALMENTE
 ## Fórmulas clave
 
 **Normalización:**
-[
-r_{ij} = \frac{x_{ij}}{\sqrt{\sum_{i=1}^{m} x_{ij}^2}}
-]
+rᵢⱼ = xᵢⱼ / √(Σ (xᵢⱼ²) para i = 1 hasta m)
 
 **Matriz ponderada:**
-[
-v_{ij} = w_j \times r_{ij}
-]
+vᵢⱼ = wⱼ × rᵢⱼ
 
-**Distancia a la solución ideal:**
-[
-S_i^{+} = \sqrt{\sum_{j=1}^{n}(v_{ij}-v_{j}^{+})^2}
-]
-[
-S_i^{-} = \sqrt{\sum_{j=1}^{n}(v_{ij}-v_{j}^{-})^2}
-]
+**Distancia a la solución ideal positiva:**
+S⁺ᵢ = √(Σ (vᵢⱼ − v⁺ⱼ)²)
+
+**Distancia a la solución ideal negativa:**
+S⁻ᵢ = √(Σ (vᵢⱼ − v⁻ⱼ)²)
 
 **Índice de cercanía relativa:**
-[
-C_i = \frac{S_i^{-}}{S_i^{+} + S_i^{-}}
-]
+Cᵢ = S⁻ᵢ / (S⁺ᵢ + S⁻ᵢ)
 
 ## Autor
 
