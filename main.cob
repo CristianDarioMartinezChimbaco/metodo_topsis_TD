@@ -1,3 +1,10 @@
+      * 
+      * 
+      *                             Online Cobol Lang Compiler.
+      *                 Code, Compile, Run and Debug Cobol Lang program online.
+      * Write your code in this editor and press "Run" button to execute it.
+      * 
+      * 
         IDENTIFICATION DIVISION.
         PROGRAM-ID. TOPSIS-RIM.
     
@@ -11,25 +18,23 @@
         SELECT CSV-SOLUCIONES ASSIGN TO 'SOLUCIONES.csv'
         ORGANIZATION IS LINE SEQUENTIAL.
     
-        
-    
         DATA DIVISION.
         FILE SECTION.
         FD  CSV-PESOS.
         01  PESOS.
-            05  CSV-RECORD       PIC X(100).
+            05  CSV-RECORD       PIC X(1000).
         FD  CSV-PAGOS.
         01  PAGOS.
-            05  CSV-RECORD       PIC X(100). 
+            05  CSV-RECORD       PIC X(1000). 
         FD  CSV-SOLUCIONES.
         01  SOLUCIONES.
-            05  CSV-RECORD       PIC X(100). 
+            05  CSV-RECORD       PIC X(1000). 
         
         WORKING-STORAGE SECTION.
         01  EOF                  PIC 9 VALUE 0.
         01  COMA-POS             PIC 9(3) VALUE 0.
-        01  RESTO                PIC X(100).
-        01  RESTO-POS            PIC 9(2) VALUE 1.
+        01  RESTO                PIC X(1000).
+        01  RESTO-POS            PIC 9(5) VALUE 1.
         01  NUMERO               PIC X(14).
         01  POSS                 PIC 9(2) VALUE 1.
         01  BAND                 PIC 9 VALUE 0.
@@ -43,19 +48,21 @@
         01  MAXIMOS              OCCURS 30 TIMES.
             05  MAXIMO           PIC S9(7)V9(4).     
         01  SOLUCION-POSITIVA    OCCURS 30 TIMES.
-            05  SOLUCION         PIC S9(2). 
+            05  SOLUCION         PIC S9(2)V9(4). 
         01  SOLUCION-NEGATIVA    OCCURS 30 TIMES.
-            05  SOLUCION         PIC S9(2).
+            05  SOLUCION         PIC S9(2)V9(4).
         01  POSITIVA             OCCURS 30 TIMES.
-            05 EXTREMO           PIC S9(7)V9(4).
+            05 EXTREMO           PIC S9(1)V9(4).
         01  NEGATIVA             OCCURS 30 TIMES.
-            05 EXTREMO           PIC S9(7)V9(4).
+            05 EXTREMO           PIC S9(1)V9(4).
         01  SUMA-SEP-P           OCCURS 30 TIMES.
-            05 SUMA              PIC S9(7)V9(4).
+            05 SUMA              PIC S9(1)V9(4).
         01  SUMA-SEP-N           OCCURS 30 TIMES.
-            05 SUMA              PIC S9(7)V9(4).
+            05 SUMA              PIC S9(1)V9(4).
         01  INDICE-RELACION      OCCURS 30 TIMES.
-            05 INDICE            PIC S9(7)V9(4).
+            05 INDICE            PIC S9(1)V9(4).
+        01  RESULTADO            PIC S9(1)V9(4).
+        01  ALTERNATIVA-RES      PIC 9(2).
         01  NUMERO-CRITERIOS     PIC 9(2).
         01  NUMERO-ALTERNATIVAS  PIC 9(2).
         
@@ -66,19 +73,19 @@
         01  MATRIZ-NORMALIZADA.
             05  FILA             OCCURS 30 TIMES.
                 10  COLUMNA      OCCURS 30 TIMES.
-                    15  ELEMENTO PIC S9(7)V9(4).
+                    15  ELEMENTO PIC S9(1)V9(4).
         01  MATRIZ-PONDERADA.
             05  FILA             OCCURS 30 TIMES.
                 10  COLUMNA      OCCURS 30 TIMES.
-                    15  ELEMENTO PIC S9(7)V9(4).
+                    15  ELEMENTO PIC S9(1)V9(4).
         01  SEPARACION-POSITIVA.
             05  FILA             OCCURS 30 TIMES.
                 10  COLUMNA      OCCURS 30 TIMES.
-                    15  ELEMENTO PIC S9(7)V9(4).
+                    15  ELEMENTO PIC S9(1)V9(4).
         01  SEPARACION-NEGATIVA.
             05  FILA             OCCURS 30 TIMES.
                 10  COLUMNA      OCCURS 30 TIMES.
-                    15  ELEMENTO PIC S9(7)V9(4).
+                    15  ELEMENTO PIC S9(1)V9(4).
 
         PROCEDURE DIVISION.
         MAIN-PROCEDURE.
@@ -129,6 +136,7 @@
         PERFORM SUMA-POSITIVA
         PERFORM SUMA-NEGATIVA
         PERFORM CALCULAR-IR
+        PERFORM MEJOR-DECISION
         STOP RUN.
           
         LEER-ARCHIVO.
@@ -198,7 +206,6 @@
         
         SEPARAR-PAGOS.
         MOVE CSV-RECORD OF PAGOS TO RESTO
-        DISPLAY RESTO
         PERFORM UNTIL BAND = 1
         IF RESTO (RESTO-POS:1) = ',' 
         OR RESTO (RESTO-POS:1) = SPACE
@@ -206,7 +213,6 @@
         MOVE 1 TO BAND
         END-IF
         MOVE NUMERO TO ELEMENTO OF MATRIZ-DECISION (I, J)
-        DISPLAY "ELEMENTO: "ELEMENTO OF MATRIZ-DECISION (I, J)
         MOVE SPACES TO NUMERO
         MOVE 1 TO POSS
         ADD 1 TO RESTO-POS
@@ -216,7 +222,6 @@
         INTO NUMERO 
         WITH POINTER POSS
         END-STRING
-        DISPLAY "NUMERO ST: "NUMERO
         ADD 1 TO RESTO-POS
         END-IF        
         END-PERFORM
@@ -257,8 +262,6 @@
         BY -1
         GIVING SOLUCION OF SOLUCION-NEGATIVA (J)
         END-MULTIPLY
-        DISPLAY "SOLUCION +: " SOLUCION OF SOLUCION-POSITIVA (J)
-        DISPLAY "SOLUCION -: " SOLUCION OF SOLUCION-NEGATIVA (J)
         MOVE SPACES TO NUMERO
         MOVE 1 TO POSS
         ADD 1 TO RESTO-POS
@@ -422,35 +425,6 @@
         EXIT.
         
         DEFINIR-SOLUCIONES.
-        DISPLAY " ".
-        DISPLAY "   #**#_#***#".
-        DISPLAY "  #+++++++++#".
-        DISPLAY "   +#++++++#+".
-        DISPLAY "   + #++++#+".
-        DISPLAY "   +  #++# +".
-        DISPLAY "    +  #  +".
-        DISPLAY "    +  #".
-        DISPLAY "    + #".
-        DISPLAY "    #".
-        DISPLAY "   #    ###### ".
-        DISPLAY "  ##   ##****##* ###".
-        DISPLAY " ###   #********#***###".
-        DISPLAY " ###  ##***#(0)#**#*#*#".
-        DISPLAY " ####***#******#*#****#".
-        DISPLAY "  ####*# ##****##*****#".
-        DISPLAY "   **   #**************#".
-        DISPLAY "         #*****#*****#*#".
-        DISPLAY "     +   #****#*#****#*#".
-        DISPLAY "    + +  #***#***#****#*".
-        DISPLAY "    + +  #***#   #****#".
-        DISPLAY "    + + ###*#    ##***##".
-        DISPLAY " #########################".
-        DISPLAY " __L____OOOO_V____V__EEEE_".
-        DISPLAY " __L____O__O__V___V__E____".
-        DISPLAY " __L____O__O__V__V___EEE__".
-        DISPLAY " __L____O__O___V_V___E____".
-        DISPLAY " __LLLL_OOOO____V____EEEE_".
-        DISPLAY "##########################".
         PERFORM NUMERO-CRITERIOS TIMES
         DISPLAY "EL CRITERIO " J " ES [1] BENEFICIO [-1] COSTO"
         ACCEPT SOLUCION OF SOLUCION-POSITIVA (J)
@@ -549,6 +523,35 @@
         EXIT. 
       
         CAL-SEPARACION-P.
+        DISPLAY " ".
+        DISPLAY "   #**#_#***#".
+        DISPLAY "  #+++++++++#".
+        DISPLAY "   +#++++++#+".
+        DISPLAY "   + #++++#+".
+        DISPLAY "   +  #++# +".
+        DISPLAY "    +  #  +".
+        DISPLAY "    +  #".
+        DISPLAY "    + #".
+        DISPLAY "    #".
+        DISPLAY "   #    ###### ".
+        DISPLAY "  ##   ##****##* ###".
+        DISPLAY " ###   #********#***###".
+        DISPLAY " ###  ##***#(0)#**#*#*#".
+        DISPLAY " ####***#******#*#****#".
+        DISPLAY "  ####*# ##****##*****#".
+        DISPLAY "   **   #**************#".
+        DISPLAY "         #*****#*****#*#".
+        DISPLAY "     +   #****#*#****#*#".
+        DISPLAY "    + +  #***#***#****#*".
+        DISPLAY "    + +  #***#   #****#".
+        DISPLAY "    + + ###*#    ##***##".
+        DISPLAY " #########################".
+        DISPLAY " __L____OOOO_V____V__EEEE_".
+        DISPLAY " __L____O__O__V___V__E____".
+        DISPLAY " __L____O__O__V__V___EEE__".
+        DISPLAY " __L____O__O___V_V___E____".
+        DISPLAY " __LLLL_OOOO____V____EEEE_".
+        DISPLAY "##########################".
         DISPLAY "******SEPARACION POSITIVA******"
         PERFORM NUMERO-ALTERNATIVAS TIMES
         PERFORM NUMERO-CRITERIOS TIMES
@@ -587,6 +590,7 @@
         EXIT.
             
         SUMA-POSITIVA.
+        DISPLAY "*****SUMA POSITIVA*****" 
         PERFORM NUMERO-ALTERNATIVAS TIMES
         PERFORM NUMERO-CRITERIOS TIMES
         ADD ELEMENTO OF SEPARACION-POSITIVA (I, J) 
@@ -596,7 +600,7 @@
         COMPUTE SUMA OF SUMA-SEP-P (I) = 
         FUNCTION SQRT(SUMA OF SUMA-SEP-P (I))
         END-COMPUTE
-        DISPLAY "SUMA POSITIVA: " SUMA OF SUMA-SEP-P (I) 
+        DISPLAY SUMA OF SUMA-SEP-P (I) 
         MOVE 1 TO J
         ADD 1 TO I
         END-PERFORM
@@ -604,6 +608,7 @@
         EXIT. 
         
         SUMA-NEGATIVA.
+        DISPLAY "******SUMA NEGATIVA******"
         PERFORM NUMERO-ALTERNATIVAS TIMES
         PERFORM NUMERO-CRITERIOS TIMES
         ADD ELEMENTO OF SEPARACION-NEGATIVA (I, J) 
@@ -613,7 +618,7 @@
         COMPUTE SUMA OF SUMA-SEP-N (I) = 
         FUNCTION SQRT(SUMA OF SUMA-SEP-N (I))
         END-COMPUTE
-        DISPLAY "SUMA NEGATIVA: " SUMA OF SUMA-SEP-N (I) 
+        DISPLAY SUMA OF SUMA-SEP-N (I) 
         MOVE 1 TO J
         ADD 1 TO I
         END-PERFORM
@@ -621,17 +626,26 @@
         EXIT. 
         
         CALCULAR-IR.
+        DISPLAY "*****INDICE RELATIVO*****"
         PERFORM NUMERO-ALTERNATIVAS TIMES
         COMPUTE INDICE (I) = (SUMA OF SUMA-SEP-N (I))
         /((SUMA OF SUMA-SEP-P (I))+(SUMA OF SUMA-SEP-N (I)))
         END-COMPUTE
-        DISPLAY "INDICE RELATIVO: " INDICE (I)
+        DISPLAY INDICE (I)
         ADD 1 TO I
         END-PERFORM
         MOVE 1 TO I
         EXIT. 
             
-        IMPRIMIR-MATRIZ-DECISION.
+        MEJOR-DECISION.
+        MOVE INDICE (1) TO RESULTADO
+        PERFORM NUMERO-ALTERNATIVAS TIMES
+        IF RESULTADO <= INDICE (I)
+        MOVE INDICE (I) TO RESULTADO
+        MOVE I TO ALTERNATIVA-RES
+        END-IF
+        ADD 1 TO I
+        END-PERFORM
+        DISPLAY "LA MEJOR ALTERNAYIVA ES LA " ALTERNATIVA-RES
+        DISPLAY "CON UN IR DE: " RESULTADO
         EXIT.
-              
-                
