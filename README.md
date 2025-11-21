@@ -90,7 +90,7 @@ Cᵢ = S⁻ᵢ / (S⁺ᵢ + S⁻ᵢ)
 ## Autor
 
 **Cristian Darío Martínez Chimbaco**
-Desarrollador del sistema TOPSIS-RIM en COBOL.
+Desarrollador del sistema TOPSIS en COBOL.
 
 ---
 
