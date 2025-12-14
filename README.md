@@ -1,4 +1,4 @@
-# TOPSIS-RIM
+# TOPSIS
 
 Sistema de decisión multicriterio desarrollado en **COBOL**, que implementa el método **TOPSIS (Technique for Order Preference by Similarity to Ideal Solution)**.
 Permite evaluar alternativas con múltiples criterios y calcular el **índice de cercanía relativa** que clasifica las opciones según su similitud con la solución ideal.
@@ -90,7 +90,7 @@ Cᵢ = S⁻ᵢ / (S⁺ᵢ + S⁻ᵢ)
 ## Autor
 
 **Cristian Darío Martínez Chimbaco**
-Desarrollador del sistema TOPSIS-RIM en COBOL.
+Desarrollador del sistema TOPSIS en COBOL.
 
 ---
 
